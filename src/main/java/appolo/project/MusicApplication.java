@@ -10,5 +10,4 @@ public class MusicApplication {
 		SpringApplication.run(MusicApplication.class, args);
         System.out.print("Application Started");
 	}
-
 }
