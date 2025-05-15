@@ -22,4 +22,11 @@ public class SongController {
         List<Song> result = songService.searchOperations(genre,title,artist);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // get all the songs
+    @GetMapping
+    public ResponseEntity<List<Song>> getAllSongs(){
+        List<Song> result  =songService.getSongs();
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
 }

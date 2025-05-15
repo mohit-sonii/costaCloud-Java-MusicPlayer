@@ -26,4 +26,8 @@ public class SongService {
     public List<Song> searchOperations(String genre,String title,String artist){
         return songRepo.perfectMatcher(genre,title,artist);
     }
+
+    public List<Song> getSongs(){
+        return songRepo.getAll();
+    }
 }

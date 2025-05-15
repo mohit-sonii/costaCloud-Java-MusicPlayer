@@ -13,4 +13,7 @@ import java.util.UUID;
 public interface SongRepo extends JpaRepository<Song, UUID> {
     @Query("SELECT s from Song s where (:genre is null or genre=:genre) and (:artist is null or artist=:artist) and (:title is null or title=:title)")
     List<Song> perfectMatcher(@Param("genre") String genre, @Param("title") String title, @Param("artist") String artist);
+
+    @Query("SELECT s from Song s")
+    List<Song> getAll();
 }
