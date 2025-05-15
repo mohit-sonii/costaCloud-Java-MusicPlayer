@@ -46,4 +46,26 @@ public class PlaylistService {
         }
         return new ResponseEntity<>("Song Already in Playlist", HttpStatus.NOT_MODIFIED);
     }
+
+    public ResponseEntity<String> deleteFromList(User user, String playlist_name, String song_id) {
+        try {
+            UUID song_id_uuid = UUID.fromString(song_id);
+            Song song = songRepo.findById(song_id_uuid).orElse(null);
+            if (song == null) {
+                return new ResponseEntity<>("Song Not found", HttpStatus.NOT_FOUND);
+            }
+            Playlist findThePlaylist = user.getPlaylists().stream().filter(f -> f.getPlaylistName().equals(playlist_name)).findFirst().orElse(null);
+            if (findThePlaylist == null) {
+                return new ResponseEntity<>("Playlist not found", HttpStatus.NOT_FOUND);
+            }
+            boolean removeTheSong = findThePlaylist.getSongs().remove(song);
+            if (!removeTheSong) {
+                return new ResponseEntity<>("Song not found", HttpStatus.NOT_FOUND);
+            }
+            playlistRepo.save(findThePlaylist);
+            return new ResponseEntity<>("Successfully Deleted the song from playlist", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

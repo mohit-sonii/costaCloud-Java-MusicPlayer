@@ -33,7 +33,6 @@ public class UserService {
         return role.equals(desiredRoleForThatRoute);
 
     }
-
     public Optional<User> findTheUser(String username){
         try{
             return userRepo.findByUsername(username);

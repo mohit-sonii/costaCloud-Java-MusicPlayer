@@ -30,20 +30,44 @@ public class PlaylistController {
             @CookieValue(value = "auth_for_sec", defaultValue = "") String cookie
     ) {
         try {
-        String[] result = tokenCookie.tokenValidation(cookie, "USER");
-        if (!result[0].equals("true") || !result[1].equals("USER")) {
-            return new ResponseEntity<>("UnAuthorized", HttpStatus.UNAUTHORIZED);
+            String[] result = tokenCookie.tokenValidation(cookie, "USER");
+            if (!result[0].equals("true") || !result[1].equals("USER")) {
+                return new ResponseEntity<>("UnAuthorized", HttpStatus.UNAUTHORIZED);
+            }
+            Claims claims = tokenCookie.getClaims(cookie, "USER");
+            String username = claims.getSubject();
+            User foundUser = userService.findTheUser(username).orElse(null);
+            if (foundUser == null) {
+                return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
+            }
+            return playlistService.addInList(foundUser, playlist_name, song_id);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        Claims claims = tokenCookie.getClaims(cookie, "USER");
-        String username = claims.getSubject();
-        User foundUser = userService.findTheUser(username).orElse(null);
-        if(foundUser ==null){
-            return new ResponseEntity<>("Not Found",HttpStatus.NOT_FOUND);
-        }
-        return playlistService.addInList(foundUser,playlist_name,song_id);
-        }catch(Exception e){
-            return  new ResponseEntity<>("Internal Server Error" + e,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteSongFromPlaylist(
+            @RequestParam("playlistName") String playlist_name,
+            @RequestParam("songId") String song_id,
+            @CookieValue(value = "auth_for_sec", defaultValue = "") String cookie
+    ) {
+        try {
+            String[] result = tokenCookie.tokenValidation(cookie, "USER");
+            if (!result[0].equals("true") || !result[1].equals("USER")) {
+                return new ResponseEntity<>("UnAuthorized", HttpStatus.UNAUTHORIZED);
+            }
+            Claims claims = tokenCookie.getClaims(cookie, "USER");
+            String username = claims.getSubject();
+            User foundUser = userService.findTheUser(username).orElse(null);
+            if (foundUser == null) {
+                return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
+            }
+            return playlistService.deleteFromList(foundUser,playlist_name,song_id);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Erorr" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
