@@ -16,6 +16,9 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID playlist_id;
 
+    @Column(name = "playlist_name")
+    private String playlistName;
+
     // each playlist belong to one user;
     @ManyToOne
     @JoinColumn(name="user_id")
