@@ -1,5 +1,6 @@
 package appolo.project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,5 +27,6 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Playlist> playlists;
 }

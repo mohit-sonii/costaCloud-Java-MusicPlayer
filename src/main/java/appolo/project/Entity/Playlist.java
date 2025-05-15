@@ -1,5 +1,7 @@
 package appolo.project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +24,7 @@ public class Playlist {
     // each playlist belong to one user;
     @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonBackReference
     private User user;
 
     // each playlist can have many songs and they can be in many playlist
@@ -31,5 +34,6 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name="song_id")
     )
+    @JsonManagedReference
     private List<Song> songs;
 }

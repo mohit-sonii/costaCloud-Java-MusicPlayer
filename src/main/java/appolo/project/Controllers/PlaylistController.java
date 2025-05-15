@@ -1,5 +1,6 @@
 package appolo.project.Controllers;
 
+import appolo.project.Entity.Playlist;
 import appolo.project.Entity.User;
 import appolo.project.Service.PlaylistService;
 import appolo.project.Service.UserService;
@@ -10,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+// Although Spring Security will automatticalyy handle the authentication for whether token is valid or not whether user exists or not. But still just for safety I intriduce validation in each route. It can be improved as well but as of know I focus on to make it happen. Authenticaion check in each route is redudant but for security I think its good practice.
 
 @RestController
 @RequestMapping("/u/playlist")
@@ -69,5 +74,23 @@ public class PlaylistController {
         }
     }
 
+    @GetMapping("/playlists")
+    public ResponseEntity<List<Playlist>> getUserPlaylist(@CookieValue(value="auth_for_sec",defaultValue = "")String cookie){
+        try {
+            String[] result = tokenCookie.tokenValidation(cookie, "USER");
+            if (!result[0].equals("true") || !result[1].equals("USER")) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+            Claims claims = tokenCookie.getClaims(cookie, "USER");
+            String username = claims.getSubject();
+            User foundUser = userService.findTheUser(username).orElse(null);
+            if (foundUser == null) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            }
+            return playlistService.getPlaylist(foundUser);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
