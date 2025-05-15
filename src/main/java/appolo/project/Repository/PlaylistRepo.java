@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface PlaylistRepo extends JpaRepository<Playlist, UUID> {
     Optional<Playlist> findByUserAndPlaylistName(User user, String playlistName);
+
 }
