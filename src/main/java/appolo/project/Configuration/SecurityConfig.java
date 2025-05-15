@@ -24,7 +24,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/u/**").hasAuthority("USER")
                         .requestMatchers("/a/**").hasAuthority("ADMIN")
-                        .requestMatchers("/join/**").permitAll())
+                        .requestMatchers("/join/**").permitAll()
+                        .anyRequest().permitAll())
                 .addFilterAfter(cookieAuthFilter, BasicAuthenticationFilter.class);
 
         return http.build();

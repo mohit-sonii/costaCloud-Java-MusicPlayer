@@ -16,13 +16,13 @@ public class Song {
     private UUID song_id;
 
     @Column(name = "genre")
-    private String Genre;
+    private String genre;
 
     @Column(name = "artist")
-    private String Artist;
+    private String artist;
 
     @Column(name="title")
-    private String Title;
+    private String title;
 
     @ManyToMany(mappedBy = "songs")
     private List<Playlist> playlists;
